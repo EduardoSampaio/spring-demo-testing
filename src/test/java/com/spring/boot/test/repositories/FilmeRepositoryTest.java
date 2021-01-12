@@ -44,10 +44,10 @@ public class FilmeRepositoryTest {
 	
 	@Test
 	public void testUpdate() {
-		Filme find = this.filmeRepository.findById(-1L).get();
-		assertNotNull(find);
-		find.setNome("Lord of the rings");
-		Filme updated =  this.filmeRepository.save(find);
+		Filme retornada = this.filmeRepository.findById(-1L).get();
+		assertNotNull(retornada);
+		retornada.setNome("Lord of the rings");
+		Filme updated =  this.filmeRepository.save(retornada);
 		assertThat(updated).isNotNull();
 		assertThat(updated.getNome()).isEqualTo("Lord of the rings");
 	}
