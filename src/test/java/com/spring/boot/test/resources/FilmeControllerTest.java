@@ -3,17 +3,14 @@ package com.spring.boot.test.resources;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,9 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.boot.test.dtos.FilmeDTO;
 import com.spring.boot.test.services.FilmeService;
 import com.spring.boot.test.services.exceptions.ObjectNotFoundException;
@@ -57,21 +52,12 @@ public class FilmeControllerTest {
 	public void testGetAllFilmes() throws Exception {
 		when(service.findAll()).thenReturn(createListDataMocks());
 
-		// Forma 1
-
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/filmes").accept(MediaType.APPLICATION_JSON);
-		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-		String expected = "[{\"id\":-1,\"nome\":\"Star wars\"},{\"id\":-2,\"nome\":\"Back to the future\"}]";
-		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
-
-		// Forma 2
-
 		this.mockMvc.perform(get("/api/filmes")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.size()").value(2))
-				.andExpect(jsonPath("$[0].id").value("-1")).andExpect(jsonPath("$[0].nome").value("Star wars"))
+				.andExpect(jsonPath("$[0].id").value("-1"))
+				.andExpect(jsonPath("$[0].nome").value("Star wars"))
 				.andExpect(jsonPath("$[1].id").value("-2"))
 				.andExpect(jsonPath("$[1].nome").value("Back to the future"));
 	}

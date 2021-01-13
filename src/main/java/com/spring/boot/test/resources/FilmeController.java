@@ -24,7 +24,7 @@ public class FilmeController {
 	private FilmeService service;
 		
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<FilmeDTO> save(@RequestBody FilmeDTO objDto){
+	public ResponseEntity<?> save(@RequestBody FilmeDTO objDto){
 		
 		FilmeDTO obj = service.saveOrUpdate(objDto);
 		
@@ -36,9 +36,9 @@ public class FilmeController {
 	}
 	
 	@RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@PathVariable Long id){
+	public ResponseEntity<?> delete(@PathVariable Long id){
 		service.delete(id);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok(id);
 	}
 	
 	
@@ -53,7 +53,7 @@ public class FilmeController {
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT)
-	public ResponseEntity<Void> update(@RequestBody FilmeDTO objDto) {
+	public ResponseEntity<?> update(@RequestBody FilmeDTO objDto) {
 		service.saveOrUpdate(objDto);
 		return ResponseEntity.noContent().build();
 	}
