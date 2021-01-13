@@ -14,7 +14,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -102,9 +101,7 @@ public class FilmeControllerTest {
 
 		MockHttpServletResponse response = result.getResponse();
 	
-		assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-		assertEquals("http://localhost/api/filmes/-1",
-				response.getHeader(HttpHeaders.LOCATION));
+		assertEquals(HttpStatus.OK.value(), response.getStatus());
 	}
 	
 	@Test
@@ -125,6 +122,6 @@ public class FilmeControllerTest {
 
 		MockHttpServletResponse response = result.getResponse();
 	
-		assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+		assertEquals(HttpStatus.OK.value(), response.getStatus());
 	}
 }

@@ -1,20 +1,23 @@
 package com.spring.boot.test.resources;
 
-import java.net.URI;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.spring.boot.test.dtos.FilmeDTO;
 import com.spring.boot.test.services.FilmeService;
 import com.spring.boot.test.services.exceptions.ObjectNotFoundException;
+
+import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/api/filmes")
@@ -26,25 +29,29 @@ public class FilmeController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> save(@RequestBody FilmeDTO objDto){
 		
-		FilmeDTO obj = service.saveOrUpdate(objDto);
+		FilmeDTO saveOrUpdate = service.saveOrUpdate(objDto);
+		saveOrUpdate.add(
+				linkTo(FilmeController.class)
+				.slash(saveOrUpdate.getId())
+				.withSelfRel());
 		
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(obj.getId()).toUri();
-		
-		return ResponseEntity.created(uri).build();
+		return  ResponseEntity.ok().body(saveOrUpdate);
 		
 	}
 	
 	@RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
-	public ResponseEntity<?> delete(@PathVariable Long id){
+	public HttpEntity<?> delete(@PathVariable Long id){
 		service.delete(id);
-		return ResponseEntity.ok(id);
+		return ResponseEntity.ok(linkTo(FilmeController.class).slash(id).withSelfRel());
 	}
 	
 	
 	@RequestMapping(value = "/{id}",method = RequestMethod.GET)
-	public ResponseEntity<FilmeDTO> find(@PathVariable Long id) throws ObjectNotFoundException {
-		return ResponseEntity.ok().body(service.findById(id));
+	public HttpEntity<FilmeDTO> find(@PathVariable Long id) throws ObjectNotFoundException {
+		FilmeDTO filme = service.findById(id);
+		
+		filme.add(linkTo(FilmeController.class).withRel("Todos os Filmes"));
+		return ResponseEntity.ok().body(filme);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -53,8 +60,9 @@ public class FilmeController {
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT)
-	public ResponseEntity<?> update(@RequestBody FilmeDTO objDto) {
-		service.saveOrUpdate(objDto);
-		return ResponseEntity.noContent().build();
+	public HttpEntity<?> update(@RequestBody FilmeDTO objDto) {
+		FilmeDTO saveOrUpdate = service.saveOrUpdate(objDto);
+		saveOrUpdate.add(linkTo(FilmeController.class).slash(saveOrUpdate.getId()).withSelfRel());
+		return  ResponseEntity.ok().body(saveOrUpdate);
 	}
 }

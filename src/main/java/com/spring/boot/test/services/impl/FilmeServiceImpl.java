@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.spring.boot.test.dtos.FilmeDTO;
@@ -21,6 +23,7 @@ public class FilmeServiceImpl implements FilmeService {
 	private FilmeRepository repository;
 
 	@Override
+	@CacheEvict(cacheNames = "Filme", allEntries = true)
 	public FilmeDTO saveOrUpdate(FilmeDTO dto) {
 		Filme filme = BeanUtils.instantiateClass(Filme.class);
 		BeanUtils.copyProperties(dto, filme);
@@ -31,6 +34,7 @@ public class FilmeServiceImpl implements FilmeService {
 	}
 
 	@Override
+	@CacheEvict(cacheNames = "Filme", allEntries = true)
 	public void delete(Long id) {
 		findById(id);
 		repository.deleteById(id);	
@@ -50,7 +54,9 @@ public class FilmeServiceImpl implements FilmeService {
 		return dto;
 	}
 
+	
 	@Override
+	@Cacheable(cacheNames = "Filme", key="#root.method.name")
 	public List<FilmeDTO> findAll() {
 		List<Filme> filmes = repository.findAll();
 		List<FilmeDTO> dtos = new ArrayList<>();

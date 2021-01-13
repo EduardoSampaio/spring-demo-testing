@@ -80,6 +80,6 @@ public class FilmeIntegrationTest {
 
 		MockHttpServletResponse response = result.getResponse();
 	
-		assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+		assertEquals(HttpStatus.OK.value(), response.getStatus());
 	}
 }
