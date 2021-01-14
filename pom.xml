@@ -22,7 +22,6 @@
 		<maven.compiler.target>14</maven.compiler.target>
 		<spring-boot-admin.version>2.3.1</spring-boot-admin.version>
 		<spring-cloud.version>2020.0.0</spring-cloud.version>
-		<testcontainers.version>1.15.1</testcontainers.version>
 	</properties>
 
 	<dependencies>
@@ -118,16 +117,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
+			<artifactId>springfox-boot-starter</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web-services</artifactId>
 		</dependency>
 	</dependencies>
 

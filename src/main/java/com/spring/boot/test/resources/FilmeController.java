@@ -5,7 +5,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring.boot.test.dtos.FilmeDTO;
 import com.spring.boot.test.services.FilmeService;
 import com.spring.boot.test.services.exceptions.ObjectNotFoundException;
-
-import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/api/filmes")
@@ -30,8 +27,7 @@ public class FilmeController {
 	public ResponseEntity<?> save(@RequestBody FilmeDTO objDto){
 		
 		FilmeDTO saveOrUpdate = service.saveOrUpdate(objDto);
-		saveOrUpdate.add(
-				linkTo(FilmeController.class)
+		saveOrUpdate.add(linkTo(FilmeController.class)
 				.slash(saveOrUpdate.getId())
 				.withSelfRel());
 		
@@ -40,14 +36,14 @@ public class FilmeController {
 	}
 	
 	@RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
-	public HttpEntity<?> delete(@PathVariable Long id){
+	public ResponseEntity<?> delete(@PathVariable Long id){
 		service.delete(id);
 		return ResponseEntity.ok(linkTo(FilmeController.class).slash(id).withSelfRel());
 	}
 	
 	
 	@RequestMapping(value = "/{id}",method = RequestMethod.GET)
-	public HttpEntity<FilmeDTO> find(@PathVariable Long id) throws ObjectNotFoundException {
+	public ResponseEntity<FilmeDTO> find(@PathVariable Long id) throws ObjectNotFoundException {
 		FilmeDTO filme = service.findById(id);
 		
 		filme.add(linkTo(FilmeController.class).withRel("Todos os Filmes"));
@@ -60,7 +56,7 @@ public class FilmeController {
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT)
-	public HttpEntity<?> update(@RequestBody FilmeDTO objDto) {
+	public ResponseEntity<?> update(@RequestBody FilmeDTO objDto) {
 		FilmeDTO saveOrUpdate = service.saveOrUpdate(objDto);
 		saveOrUpdate.add(linkTo(FilmeController.class).slash(saveOrUpdate.getId()).withSelfRel());
 		return  ResponseEntity.ok().body(saveOrUpdate);
